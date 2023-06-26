@@ -578,7 +578,7 @@ class OssClient
      * @throws OssException
      * @return null
      */
-    public function addBucketCname($bucket, $cname, $options = NULL)
+    public function addBucketCname($bucket, $cname, $options = NULL,$certificateConfiguration = NULL)
     {
         $this->precheckCommon($bucket, NULL, $options, false);
         $options[self::OSS_BUCKET] = $bucket;
@@ -587,6 +587,9 @@ class OssClient
         $options[self::OSS_CONTENT_TYPE] = 'application/xml';
         $cnameConfig = new CnameConfig();
         $cnameConfig->addCname($cname);
+        if($certificateConfiguration){
+            $cnameConfig->addCertificateConfiguration($certificateConfiguration);
+        }
         $options[self::OSS_CONTENT] = $cnameConfig->serializeToXml();
         $options[self::OSS_COMP] = 'add';
         $options[self::OSS_CNAME] = '';
