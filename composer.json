@@ -1,5 +1,5 @@
 {
-    "name": "mobilenowgroup/oss-sdk-php",
+    "name": "aliyuncs/oss-sdk-php",
     "description": "Aliyun OSS SDK for PHP",
     "homepage": "http://www.aliyun.com/product/oss/",
     "type": "library",
@@ -17,7 +17,7 @@
         "phpunit/phpunit": "*",
         "satooshi/php-coveralls": "*"
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "autoload": {
         "psr-4": {"OSS\\": "src/OSS"}
     }
