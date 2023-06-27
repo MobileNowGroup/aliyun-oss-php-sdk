@@ -59,12 +59,11 @@ class CnameConfig implements XmlConfig
     }
 
     /**
-     *
      * @param array $certificateConfiguration
-     * @return array
+     * @return void
      * @throws OssException
      */
-    public function addCertificateConfiguration(array $certificateConfiguration): array
+    public function addCertificateConfiguration(array $certificateConfiguration)
     {
         if (count($this->cnameList) >= self::OSS_MAX_RULES) {
             throw new OssException(
