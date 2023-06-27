@@ -17,7 +17,7 @@
         "phpunit/phpunit": "*",
         "satooshi/php-coveralls": "*"
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {"OSS\\": "src/OSS"}
     }
