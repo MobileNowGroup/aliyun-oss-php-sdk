@@ -578,7 +578,7 @@ class OssClient
      * @throws OssException
      * @return null
      */
-    public function addBucketCname($bucket, $cname, $options = NULL,$certificateConfiguration = NULL)
+    public function addBucketCname($bucket, $cname, $options = NULL)
     {
         $this->precheckCommon($bucket, NULL, $options, false);
         $options[self::OSS_BUCKET] = $bucket;
@@ -587,9 +587,6 @@ class OssClient
         $options[self::OSS_CONTENT_TYPE] = 'application/xml';
         $cnameConfig = new CnameConfig();
         $cnameConfig->addCname($cname);
-        if($certificateConfiguration){
-            $cnameConfig->addCertificateConfiguration($certificateConfiguration);
-        }
         $options[self::OSS_CONTENT] = $cnameConfig->serializeToXml();
         $options[self::OSS_COMP] = 'add';
         $options[self::OSS_CNAME] = '';
@@ -599,6 +596,34 @@ class OssClient
         return $result->getData();
     }
 
+    /**
+     * Bind a CName for the bucket
+     *
+     * @param string $bucket bucket name
+     * @param string $cname
+     * @param array $options
+     * @return null
+     *@throws OssException
+     */
+    public function addBucketCnameWithCertificate(string $bucket, string $cname, array $options)
+    {
+        $this->precheckCommon($bucket, NULL, $options, false);
+        $options[self::OSS_BUCKET] = $bucket;
+        $options[self::OSS_METHOD] = self::OSS_HTTP_POST;
+        $options[self::OSS_OBJECT] = '/';
+        $options[self::OSS_CONTENT_TYPE] = 'application/xml';
+        $cnameConfig = new CnameConfig();
+        $cnameConfig->addCname($cname);
+        $cnameConfig->addCertificateConfiguration($options);
+
+        $options[self::OSS_CONTENT] = $cnameConfig->serializeToXml();
+        $options[self::OSS_COMP] = 'add';
+        $options[self::OSS_CNAME] = '';
+
+        $response = $this->auth($options);
+        $result = new PutSetDeleteResult($response);
+        return $result->getData();
+    }
     /**
      * Gets the binded CName list of the bucket
      *

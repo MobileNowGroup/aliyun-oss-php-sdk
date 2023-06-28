@@ -104,7 +104,15 @@ EOF;
         foreach ($this->cnameList as $cname) {
             $node = $xml->addChild('Cname');
             foreach ($cname as $key => $value) {
-                $node->addChild($key, $value);
+                if(is_array($value)){
+                    $node = $node->addChild('CertificateConfiguration');
+                    foreach ($value as $k => $certConfig) {
+                        $node->addChild($k, $certConfig);
+                    }
+                }else{
+                    $node->addChild($key, $value);
+                }
+
             }
         }
         return $xml->asXML();
