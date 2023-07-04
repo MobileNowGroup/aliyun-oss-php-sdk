@@ -58,6 +58,28 @@ class CnameConfig implements XmlConfig
         $this->cnameList[] = array('Domain' => $cname);
     }
 
+    /**
+     * @param array $certificateConfiguration
+     * @return void
+     * @throws OssException
+     */
+    public function addCertificateConfiguration(array $certificateConfiguration)
+    {
+        if (count($this->cnameList) >= self::OSS_MAX_RULES) {
+            throw new OssException(
+                "num of cname in the config exceeds self::OSS_MAX_RULES: " . strval(self::OSS_MAX_RULES));
+        }
+        $this->cnameList[] = array(
+            'CertificateConfiguration' => [
+                'CertId' => $certificateConfiguration['certId'],
+                'Certificate' => $certificateConfiguration['certificate'],
+                'PrivateKey' => $certificateConfiguration['privateKey'],
+                'PreviousCertId' => $certificateConfiguration['previousCertId'] ?? null,
+                'Force' => $certificateConfiguration['force'] ?? "true",
+                'DeleteCertificate' => $certificateConfiguration['deleteCertificate'] ?? "false"
+            ]);
+    }
+
     public function parseFromXml($strXml)
     {
         $xml = simplexml_load_string($strXml);
@@ -82,7 +104,15 @@ EOF;
         foreach ($this->cnameList as $cname) {
             $node = $xml->addChild('Cname');
             foreach ($cname as $key => $value) {
-                $node->addChild($key, $value);
+                if(is_array($value)){
+                    $node = $node->addChild('CertificateConfiguration');
+                    foreach ($value as $k => $certConfig) {
+                        $node->addChild($k, $certConfig);
+                    }
+                }else{
+                    $node->addChild($key, $value);
+                }
+
             }
         }
         return $xml->asXML();
