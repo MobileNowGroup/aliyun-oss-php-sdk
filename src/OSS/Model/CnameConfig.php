@@ -101,13 +101,13 @@ class CnameConfig implements XmlConfig
 </BucketCnameConfiguration>
 EOF;
         $xml = new \SimpleXMLElement($strXml);
+        $node = $xml->addChild('Cname');
         foreach ($this->cnameList as $cname) {
-            $node = $xml->addChild('Cname');
             foreach ($cname as $key => $value) {
                 if(is_array($value)){
-                    $node = $node->addChild('CertificateConfiguration');
+                    $secondNode = $node->addChild($key);
                     foreach ($value as $k => $certConfig) {
-                        $node->addChild($k, $certConfig);
+                        $secondNode->addChild($k, $certConfig);
                     }
                 }else{
                     $node->addChild($key, $value);
