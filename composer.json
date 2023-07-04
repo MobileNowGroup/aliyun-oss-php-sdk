@@ -13,6 +13,9 @@
     "require": {
         "php":">=5.3"
     },
+    "replace": {
+        "aliyuncs/oss-sdk-php": "^2.6"
+    },
     "require-dev" : {
         "phpunit/phpunit": "*",
         "satooshi/php-coveralls": "*"
